@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "375218628583",
+    "project_id": "vrit-search-image-project",
+    "storage_bucket": "vrit-search-image-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:375218628583:android:9b970f32a646c3844e7f42",
+        "android_client_info": {
+          "package_name": "com.vrittech.vrit_task"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPwwnSLQdJQzK6Pz8ISRDVpmVk3W0EGhE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
