@@ -9,31 +9,40 @@ dependencies:
   flutter:
     sdk: flutter
 
-
-  cupertino_icons: ^1.0.6
+  # FIREBASE
   firebase_core: ^3.1.0
-  flutter_svg: ^2.0.10+1
-  go_router: ^14.2.0
-  bot_toast: ^4.1.3
-  
-  font_awesome_flutter: ^10.7.0
-  fpdart: ^1.1.0
-  dio: ^5.4.3+1
-  google_sign_in: ^6.2.1
-  provider: ^6.1.2
   firebase_auth: ^5.1.0
-  flutter_secure_storage: ^9.2.2
-  image_picker: ^1.1.2
-  flutter_image_compress: ^2.3.0
-  isar: ^3.1.0+1
-  isar_flutter_libs: ^3.1.0+1
-  path_provider: ^2.1.3
-  intl: ^0.19.0
-  flutter_local_notifications: ^17.1.2
   firebase_messaging: ^15.0.1
+
+  # IMAGES
+  flutter_svg: ^2.0.10+1
   cached_network_image: ^3.3.1
   flutter_wallpaper_manager: ^0.0.4
   flutter_cache_manager: ^3.3.2
+  image_picker: ^1.1.2
+  flutter_image_compress: ^2.3.0
+
+  # STATE_MANAGEMENT
+  fpdart: ^1.1.0
+  path_provider: ^2.1.3
+  provider: ^6.1.2
+
+  # NETWORK_CALLS
+  go_router: ^14.2.0
+  google_sign_in: ^6.2.1
+  dio: ^5.4.3+1
+
+  # STORAGE
+  flutter_secure_storage: ^9.2.2
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+
+  # EXTRAS
+  cupertino_icons: ^1.0.6
+  bot_toast: ^4.1.3
+  font_awesome_flutter: ^10.7.0
+  intl: ^0.19.0
+  flutter_local_notifications: ^17.1.2
 
 dev_dependencies:
   flutter_test:
