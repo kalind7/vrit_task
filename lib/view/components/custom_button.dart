@@ -31,9 +31,11 @@ class CustomButton extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             rowWidgetForButton ?? const SizedBox.shrink(),
-            Text(
-              buttonTitle,
-              style: const TextStyle(color: Colors.white),
+            Flexible(
+              child: Text(
+                buttonTitle,
+                style: const TextStyle(color: Colors.white),
+              ),
             ),
           ],
         ),

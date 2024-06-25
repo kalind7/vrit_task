@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -12,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:vrit_task/model/app_models/local_image_model.dart';
 import 'package:vrit_task/model/controller/export_controller.dart';
 import 'package:vrit_task/view/components/export_components.dart';
+import 'package:vrit_task/view/screens/export_screen.dart';
 import 'package:vrit_task/view_model/export_viewmodel.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -31,6 +33,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   final userModel = FirebaseAuth.instance.currentUser;
+
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +70,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
               });
             },
           ),
+          CustomListtile(
+            title: 'Logout',
+            icon: Icons.logout,
+            onTap: () async {
+              await _googleSignIn.signOut();
+              await _firebaseAuth.signOut();
+              await SecureStorage.deleteAll();
+              context.pushReplacementNamed(LoginScreen.routeName);
+            },
+          )
         ],
       );
     });
@@ -187,52 +202,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
       BuildContext context, BasepageProvider baseProv, IsarProvider isarProv) {
     return showDialog(
         context: context,
-        builder: (context) =>
-            CustomDialog.normalPopUp(context, title: "Upload Profile Picture",
-                content: StatefulBuilder(builder: (context, setState) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CustomListtile(
-                    title: 'Select Image from Gallery',
-                    icon: Icons.photo,
-                    onTap: () {
-                      baseProv
-                          .selectAndCompressImage(ImageSource.gallery)
-                          .then((value) {
-                        if (baseProv.profileImage?.path != null) {
-                          log("I am herrrr inside picker ${baseProv.profileImage!.path}");
-                          isarProv.writeToDb(LocalImageModel(
-                              imagePath: baseProv.profileImage!.path));
-                        }
-                        context.pop();
-                      });
-                    },
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  CustomListtile(
-                    title: 'Select Image from Camera',
-                    icon: Icons.camera_alt,
-                    onTap: () {
-                      baseProv
-                          .selectAndCompressImage(ImageSource.camera)
-                          .then((value) {
-                        if (baseProv.profileImage?.path != null) {
-                          log("I am herrrr inside picker ${baseProv.profileImage!.path}");
-                          isarProv.writeToDb(LocalImageModel(
-                              imagePath: baseProv.profileImage!.path));
-                        }
-                        context.pop();
-                      });
-                    },
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  )
-                ],
-              );
-            })));
+        builder: (context) => CustomDialog.normalPopUp(context,
+            title: "Upload Profile Picture",
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CustomListtile(
+                  title: 'Select Image from Gallery',
+                  icon: Icons.photo,
+                  onTap: () {
+                    baseProv
+                        .selectAndCompressImage(ImageSource.gallery)
+                        .then((value) {
+                      if (baseProv.profileImage?.path != null) {
+                        log("I am herrrr inside picker ${baseProv.profileImage!.path}");
+                        isarProv.writeToDb(LocalImageModel(
+                            imagePath: baseProv.profileImage!.path));
+                      }
+                      context.pop();
+                    });
+                  },
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CustomListtile(
+                  title: 'Select Image from Camera',
+                  icon: Icons.camera_alt,
+                  onTap: () {
+                    baseProv
+                        .selectAndCompressImage(ImageSource.camera)
+                        .then((value) {
+                      if (baseProv.profileImage?.path != null) {
+                        log("I am herrrr inside picker ${baseProv.profileImage!.path}");
+                        isarProv.writeToDb(LocalImageModel(
+                            imagePath: baseProv.profileImage!.path));
+                      }
+                      context.pop();
+                    });
+                  },
+                ),
+                const SizedBox(
+                  height: 10,
+                )
+              ],
+            )));
   }
 }

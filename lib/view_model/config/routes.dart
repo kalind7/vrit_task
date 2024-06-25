@@ -1,5 +1,6 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:vrit_task/model/app_models/image_model.dart';
 
 import 'package:vrit_task/view/screens/export_screen.dart';
 
@@ -41,6 +42,22 @@ class GoRouteNavigation {
       name: HomePage.routeName,
       builder: (context, state) {
         return HomePage();
+      },
+    ),
+    GoRoute(
+      path: FavouriteScreen.routeName,
+      name: FavouriteScreen.routeName,
+      builder: (context, state) {
+        return const FavouriteScreen();
+      },
+    ),
+    GoRoute(
+      path: DetailPage.routeName,
+      name: DetailPage.routeName,
+      builder: (context, state) {
+        return DetailPage(
+          imageDatas: state.extra as Hit,
+        );
       },
     ),
   ]);

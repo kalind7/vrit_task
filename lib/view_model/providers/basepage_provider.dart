@@ -24,9 +24,7 @@ class BasepageProvider extends ChangeNotifier {
 
   List<Widget> bottomNavbarScreens = [
     HomePage(),
-    const Center(
-      child: Text('Liked Page'),
-    ),
+    const FavouriteScreen(),
     const ProfileScreen()
   ];
 
@@ -133,5 +131,17 @@ class BasepageProvider extends ChangeNotifier {
     notifyListeners();
 
     return imageModel;
+  }
+
+  List<Hit> favouriteList = [];
+
+  addFavouriteDatas(Hit hit) {
+    favouriteList.add(hit);
+    notifyListeners();
+  }
+
+  removeFavourite(Hit hit) {
+    favouriteList.remove(hit);
+    notifyListeners();
   }
 }
