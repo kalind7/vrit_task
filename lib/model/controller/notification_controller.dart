@@ -6,12 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:vrit_task/view/components/export_components.dart';
 
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
-import 'package:vrit_task/view_model/config/export_config.dart';
-
-import '../../view_model/constants/app_keys.dart';
-
 void onDidReceiveNotificationResponse(
   NotificationResponse notificationResponse,
 ) async {
@@ -65,31 +59,6 @@ class NotificationController {
         channelDescription: _androidChannel.description,
       )),
     );
-  }
-
-  Future scheduleNotification(
-      {int id = 0,
-      String? title,
-      String? body,
-      String? payLoad,
-      required DateTime scheduledNotificationDateTime}) async {
-    return _localNotificationPlugin.zonedSchedule(
-        id,
-        title,
-        body,
-        tz.TZDateTime.from(
-          scheduledNotificationDateTime,
-          tz.local,
-        ),
-        NotificationDetails(
-            android: AndroidNotificationDetails(
-          _androidChannel.id,
-          _androidChannel.name,
-          channelDescription: _androidChannel.description,
-        )),
-        androidScheduleMode: AndroidScheduleMode.exact,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime);
   }
 
   //handle Message

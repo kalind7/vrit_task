@@ -1,13 +1,19 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:vrit_task/model/export_models.dart';
 import 'package:vrit_task/view/components/export_components.dart';
 import 'package:vrit_task/view/screens/export_screen.dart';
 
 class BasepageProvider extends ChangeNotifier {
+  BasepageProvider() {
+    fetchImageDatas();
+  }
+
 // Base Page Datas
   int currentIndex = 0;
 
@@ -17,9 +23,7 @@ class BasepageProvider extends ChangeNotifier {
   }
 
   List<Widget> bottomNavbarScreens = [
-    const Center(
-      child: Text('Home Page'),
-    ),
+    HomePage(),
     const Center(
       child: Text('Liked Page'),
     ),
@@ -90,5 +94,44 @@ class BasepageProvider extends ChangeNotifier {
       debugPrint(e.toString());
     }
     notifyListeners();
+  }
+
+// FUNCTION TO GET LIST OF IMAGES//
+
+  ImageModel? imageModel;
+  List<Hit> hitList = [];
+
+  String? errorOfApiCall;
+  bool isLoading = false;
+  int initialPage = 1;
+  final TextEditingController searchController = TextEditingController();
+  toggleLoading(bool newLoading) {
+    isLoading = newLoading;
+    notifyListeners();
+  }
+
+  Future<ImageModel?> fetchImageDatas({
+    String? searchQuery,
+    int defaultInitialPage = 1,
+    bool showLoading = true,
+  }) async {
+    showLoading ? toggleLoading(true) : toggleLoading(false);
+
+    final response = await AppRepo().getImages(
+        searchQuery: searchQuery, page: defaultInitialPage, limit: 10);
+
+    toggleLoading(false);
+
+    response.fold(
+        (error) => errorOfApiCall, (imageDatas) => imageModel = imageDatas);
+    notifyListeners();
+
+    if (imageModel != null) {
+      hitList = imageModel!.hits!;
+    }
+
+    notifyListeners();
+
+    return imageModel;
   }
 }

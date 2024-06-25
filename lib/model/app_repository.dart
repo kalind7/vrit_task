@@ -1,9 +1,12 @@
 import 'dart:developer';
 
 import 'package:bot_toast/bot_toast.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:vrit_task/model/apis/export_api.dart';
+import 'package:vrit_task/model/app_models/export_app_models.dart';
 import 'package:vrit_task/view/components/export_components.dart';
 import 'package:vrit_task/view_model/export_viewmodel.dart';
 
@@ -47,6 +50,30 @@ class AppRepo {
 
       log("$e");
       showBotToast(text: "Error occurred $e", isError: true);
+      return left(e.toString());
+    }
+  }
+
+  EitherFunction<ImageModel> getImages(
+      {String? searchQuery, int? limit, int? page}) async {
+    Dio dio = Dio();
+    try {
+      var response = await dio.get(Endpoints.mainUrl, queryParameters: {
+        'key': apiKey,
+        'image_type': 'photo',
+        'limit': limit,
+        'page': page,
+        'q': searchQuery,
+      });
+
+      log("${response.realUri}");
+
+      return right(ImageModel.fromJson(response.data));
+    } on DioException catch (e) {
+      log("${e.error}");
+      return left(e.error.toString());
+    } catch (e) {
+      log("$e");
       return left(e.toString());
     }
   }

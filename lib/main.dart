@@ -22,7 +22,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProvider(create: (_) => BasepageProvider()),
+        ChangeNotifierProvider(
+            create: (_) => BasepageProvider()..fetchImageDatas()),
         ChangeNotifierProvider(create: (_) => DatePickerProvider()),
         ChangeNotifierProvider(create: (_) => IsarProvider()..initIsar()),
       ],

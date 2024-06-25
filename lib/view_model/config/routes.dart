@@ -36,6 +36,13 @@ class GoRouteNavigation {
         return const ProfileScreen();
       },
     ),
+    GoRoute(
+      path: HomePage.routeName,
+      name: HomePage.routeName,
+      builder: (context, state) {
+        return HomePage();
+      },
+    ),
   ]);
 
   GoRouter get goRouter => _router;
