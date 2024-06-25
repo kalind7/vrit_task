@@ -3,12 +3,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vrit_task/firebase_options.dart';
+import 'package:vrit_task/model/controller/export_controller.dart';
 import 'package:vrit_task/view_model/config/export_config.dart';
 import 'package:vrit_task/view_model/providers/export_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  await NotificationController().initNotifications();
   runApp(const MyApp());
 }
 
@@ -20,6 +23,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => BasepageProvider()),
+        ChangeNotifierProvider(create: (_) => DatePickerProvider()),
         ChangeNotifierProvider(create: (_) => IsarProvider()..initIsar()),
       ],
       child: MaterialApp.router(

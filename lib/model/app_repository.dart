@@ -31,6 +31,8 @@ class AppRepo {
               idToken: googleSignInAuthentication.idToken);
           SecureStorage.setData(
               googleLoginToken, googleSignInAuthentication.accessToken!);
+
+          SecureStorage.setData(username, googleSignInAccount.displayName!);
           await firebaseAuth.signInWithCredential(authCredential);
 
           BotToast.closeAllLoading();

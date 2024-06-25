@@ -1,15 +1,17 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 import 'package:provider/provider.dart';
 import 'package:vrit_task/model/app_models/local_image_model.dart';
+import 'package:vrit_task/model/controller/export_controller.dart';
 import 'package:vrit_task/view/components/export_components.dart';
-import 'package:vrit_task/view/features/export_features.dart';
 import 'package:vrit_task/view_model/export_viewmodel.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -28,12 +30,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Provider.of<IsarProvider>(context, listen: false).readFromDb();
   }
 
+  final userModel = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
-    return Consumer2<BasepageProvider, IsarProvider>(
-        builder: (context, baseProv, isarProv, child) {
+    return Consumer3<BasepageProvider, IsarProvider, DatePickerProvider>(
+        builder: (context, baseProv, isarProv, pickerProv, child) {
       return Column(
-        children: [pickProfileImage(context, baseProv, isarProv)],
+        children: [
+          pickProfileImage(context, baseProv, isarProv),
+          CustomListtile(
+            title: 'Calendar',
+            icon: Icons.calendar_month,
+            subtitle: pickerProv.currentDateTime != null
+                ? Text(
+                    DateFormat.yMMMMd().format(pickerProv.currentDateTime!),
+                  )
+                : null,
+            onTap: () {
+              pickerProv
+                  .mainPicker(
+                context,
+              )
+                  .then((selectedDate) {
+                pickerProv.changeDate(selectedDate);
+                log("${pickerProv.currentDateTime}");
+
+                if (pickerProv.currentDateTime ==
+                    DateTime(DateTime.now().year, DateTime.now().month,
+                        DateTime.now().day)) {
+                  NotificationController()
+                      .showNotification(username: userModel?.displayName);
+                }
+              });
+            },
+          ),
+        ],
       );
     });
   }
@@ -41,60 +73,101 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget pickProfileImage(
       BuildContext context, BasepageProvider baseProv, IsarProvider isarProv) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (baseProv.profileImage?.path != null) ...[
-          Center(
-            child: ClipOval(
-              child: Image.file(
-                File(baseProv.profileImage!.path),
-                height: 100,
-                width: 100,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return ClipOval(
-                    child: SvgPicture.asset(
-                      MyImages.logo,
-                      fit: BoxFit.contain,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  if (baseProv.profileImage?.path != null) ...[
+                    Center(
+                      child: ClipOval(
+                        child: Image.file(
+                          File(baseProv.profileImage!.path),
+                          height: 100,
+                          width: 100,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return ClipOval(
+                              child: SvgPicture.asset(
+                                MyImages.logo,
+                                fit: BoxFit.contain,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    )
+                  ] else if (isarProv.locallySavedImagePath.isNotEmpty) ...[
+                    Center(
+                      child: ClipOval(
+                        child: Image.file(
+                          File(isarProv.locallySavedImagePath.last.imagePath),
+                          fit: BoxFit.cover,
+                          height: 100,
+                          width: 100,
+                          errorBuilder: (context, error, stackTrace) {
+                            return ClipOval(
+                              child: SvgPicture.asset(
+                                MyImages.logo,
+                                fit: BoxFit.contain,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    )
+                  ] else ...[
+                    Center(
+                      child: Container(
+                        height: 100,
+                        width: 100,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.black)),
+                        child: SvgPicture.asset(
+                          MyImages.logo,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    )
+                  ],
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  if (userModel != null) ...[
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (userModel?.displayName != null) ...[
+                            const Text(
+                              "User Details",
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black),
+                            ),
+                            Text(userModel!.displayName!),
+                          ],
+                          if (userModel?.email != null) ...[
+                            Text(userModel!.email!),
+                          ],
+                          if (userModel?.phoneNumber != null) ...[
+                            Text(userModel!.phoneNumber!),
+                          ]
+                        ],
+                      ),
                     ),
-                  );
-                },
-              ),
-            ),
-          )
-        ] else if (isarProv.locallySavedImagePath.isNotEmpty) ...[
-          Center(
-            child: ClipOval(
-              child: Image.file(
-                File(isarProv.locallySavedImagePath.last.imagePath),
-                fit: BoxFit.cover,
-                height: 100,
-                width: 100,
-                errorBuilder: (context, error, stackTrace) {
-                  return ClipOval(
-                    child: SvgPicture.asset(
-                      MyImages.logo,
-                      fit: BoxFit.contain,
-                    ),
-                  );
-                },
-              ),
-            ),
-          )
-        ] else ...[
-          Center(
-            child: Container(
-              height: 100,
-              width: 100,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.black)),
-              child: SvgPicture.asset(
-                MyImages.logo,
-                fit: BoxFit.contain,
-              ),
-            ),
-          )
-        ],
+                  ]
+                ],
+              )
+            ],
+          ),
+        ),
+
         TextButton(
           onPressed: () {
             showPopUpDialog(context, baseProv, isarProv);
@@ -120,7 +193,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  DialogContents(
+                  CustomListtile(
                     title: 'Select Image from Gallery',
                     icon: Icons.photo,
                     onTap: () {
@@ -139,7 +212,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  DialogContents(
+                  CustomListtile(
                     title: 'Select Image from Camera',
                     icon: Icons.camera_alt,
                     onTap: () {
