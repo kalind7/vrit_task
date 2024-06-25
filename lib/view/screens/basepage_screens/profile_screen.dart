@@ -74,10 +74,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             title: 'Logout',
             icon: Icons.logout,
             onTap: () async {
-              await _googleSignIn.signOut();
-              await _firebaseAuth.signOut();
-              await SecureStorage.deleteAll();
-              context.pushReplacementNamed(LoginScreen.routeName);
+              showDialog(
+                  context: context,
+                  builder: (context) => CustomDialog.buildWillPopUp(context,
+                          title: 'Do you want to Logout ?', onTapOk: () async {
+                        await _googleSignIn.signOut();
+                        await _firebaseAuth.signOut();
+                        await SecureStorage.deleteAll();
+                        context.pushReplacementNamed(LoginScreen.routeName);
+                      }));
             },
           )
         ],
