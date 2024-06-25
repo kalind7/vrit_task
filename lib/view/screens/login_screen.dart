@@ -86,7 +86,7 @@ class LoginScreen extends StatelessWidget {
                           text: authProv.errorOfGoogleLogin,
                           style: const TextStyle(
                               color: Colors.red,
-                              fontSize: 20,
+                              fontSize: 14,
                               fontWeight: FontWeight.w600),
                         ),
                       ]))
