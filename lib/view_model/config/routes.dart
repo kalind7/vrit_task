@@ -26,7 +26,14 @@ class GoRouteNavigation {
       path: BasePage.routeName,
       name: BasePage.routeName,
       builder: (context, state) {
-        return BasePage();
+        return const BasePage();
+      },
+    ),
+    GoRoute(
+      path: ProfileScreen.routeName,
+      name: ProfileScreen.routeName,
+      builder: (context, state) {
+        return const ProfileScreen();
       },
     ),
   ]);

@@ -13,6 +13,8 @@ class CustomLoader extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           Container(
+              height: 50,
+              width: 50,
               padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
                   color: Colors.white,
@@ -22,8 +24,7 @@ class CustomLoader extends StatelessWidget {
                   shape: BoxShape.circle),
               child: SvgPicture.asset(
                 MyImages.logo,
-                height: 40,
-                width: 40,
+                fit: BoxFit.contain,
               )),
           const SizedBox(
             height: 50,

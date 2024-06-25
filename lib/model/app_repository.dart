@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:vrit_task/view/components/export_components.dart';
+import 'package:vrit_task/view_model/export_viewmodel.dart';
 
 typedef EitherFunction<T> = Future<Either<String, T>>;
 
@@ -22,16 +23,21 @@ class AppRepo {
         final GoogleSignInAuthentication googleSignInAuthentication =
             await googleSignInAccount.authentication;
 
-        final AuthCredential authCredential = GoogleAuthProvider.credential(
-            accessToken: googleSignInAuthentication.accessToken,
-            idToken: googleSignInAuthentication.idToken);
-
-        await firebaseAuth.signInWithCredential(authCredential);
         log("${googleSignInAuthentication.accessToken}");
-        BotToast.closeAllLoading();
-        showBotToast(
-            text:
-                "Signed in successfully as ${googleSignInAccount.displayName}");
+
+        if (googleSignInAuthentication.accessToken != null) {
+          final AuthCredential authCredential = GoogleAuthProvider.credential(
+              accessToken: googleSignInAuthentication.accessToken,
+              idToken: googleSignInAuthentication.idToken);
+          SecureStorage.setData(
+              googleLoginToken, googleSignInAuthentication.accessToken!);
+          await firebaseAuth.signInWithCredential(authCredential);
+
+          BotToast.closeAllLoading();
+          showBotToast(
+              text:
+                  "Signed in successfully as ${googleSignInAccount.displayName}");
+        }
       }
       return right(null);
     } catch (e) {

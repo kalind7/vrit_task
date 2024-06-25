@@ -1,37 +1,28 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:vrit_task/view/components/custom_button.dart';
-import 'package:vrit_task/view/screens/export_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:vrit_task/view_model/providers/basepage_provider.dart';
 
 class BasePage extends StatelessWidget {
-  BasePage({super.key});
+  const BasePage({super.key});
 
   static const String routeName = "/basepage";
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            child: const Text('Base Page'),
-          ),
-          CustomButton(
-            buttonTitle: 'Logout',
-            onTap: () async {
-              await _googleSignIn.signOut().then((onValue) {
-                log("$onValue");
-                context.pushReplacementNamed(LoginScreen.routeName);
-              });
-            },
-          )
-        ],
-      ),
-    );
+    return Consumer<BasepageProvider>(builder: (context, baseProv, child) {
+      return Scaffold(
+          bottomNavigationBar: BottomNavigationBar(
+              currentIndex: baseProv.currentIndex,
+              backgroundColor: Colors.white,
+              onTap: (index) {
+                baseProv.changeCurrentIndex(index);
+              },
+              items: baseProv.bottomNavBarItems(context)),
+          body: SafeArea(
+            child: Column(
+              children: [baseProv.bottomNavbarScreens[baseProv.currentIndex]],
+            ),
+          ));
+    });
   }
 }

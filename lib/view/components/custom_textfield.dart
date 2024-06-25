@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CustomFormField extends StatelessWidget {
+class CustomFormField extends StatefulWidget {
   const CustomFormField({
     super.key,
     required this.label,
@@ -8,6 +8,11 @@ class CustomFormField extends StatelessWidget {
 
   final String label;
 
+  @override
+  State<CustomFormField> createState() => _CustomFormFieldState();
+}
+
+class _CustomFormFieldState extends State<CustomFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -19,7 +24,7 @@ class CustomFormField extends StatelessWidget {
       },
       decoration: InputDecoration(
         label: Text(
-          label,
+          widget.label,
           style: const TextStyle(color: Colors.black),
         ),
         enabledBorder: OutlineInputBorder(
